@@ -16,7 +16,7 @@ public class Review {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer reviewId;
+	private Long reviewId;
 	private String comment;
 	private Timestamp time;
 
@@ -32,7 +32,7 @@ public class Review {
 		super();
 	}
 
-	public Review(Integer reviewId, String comment, Timestamp time, Member member, Picture picture) {
+	public Review(Long reviewId, String comment, Timestamp time, Member member, Picture picture) {
 		super();
 		this.reviewId = reviewId;
 		this.comment = comment;
@@ -65,11 +65,11 @@ public class Review {
 		this.picture = picture;
 	}
 
-	public Integer getReviewId() {
+	public Long getReviewId() {
 		return reviewId;
 	}
 
-	public void setReviewId(Integer reviewId) {
+	public void setReviewId(Long reviewId) {
 		this.reviewId = reviewId;
 	}
 

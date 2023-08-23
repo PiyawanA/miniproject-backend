@@ -99,14 +99,14 @@ public class MemberController {
 	}
 
 	@DeleteMapping("/memDelete/{memId}")
-	public ResponseEntity<Object> deletEmployee(@PathVariable Long memId) {
+	public ResponseEntity<Object> deleteMember(@PathVariable Long memId) {
 
 		try {
-			Optional<Member> employee = memberRepository.findById(memId);
+			Optional<Member> member = memberRepository.findById(memId);
 
-			if (employee.isPresent()) {
+			if (member.isPresent()) {
 
-				memberRepository.delete(employee.get());
+				memberRepository.delete(member.get());
 
 				return new ResponseEntity<>("Delete Sucess", HttpStatus.OK);
 

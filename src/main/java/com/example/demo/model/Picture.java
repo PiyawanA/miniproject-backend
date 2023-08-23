@@ -18,7 +18,7 @@ public class Picture {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer picId;
+	private Long picId;
 	private String name;
 	private String caption;
 	private Timestamp time;
@@ -35,7 +35,7 @@ public class Picture {
 		super();
 	}
 
-	public Picture(Integer picId, String name, String caption, Timestamp time, byte[] pic, Gallery gallery) {
+	public Picture(Long picId, String name, String caption, Timestamp time, byte[] pic, Gallery gallery) {
 		super();
 		this.picId = picId;
 		this.name = name;
@@ -61,11 +61,11 @@ public class Picture {
 		this.caption = caption;
 	}
 
-	public Integer getPicId() {
+	public Long getPicId() {
 		return picId;
 	}
 
-	public void setPicId(Integer picId) {
+	public void setPicId(Long picId) {
 		this.picId = picId;
 	}
 
