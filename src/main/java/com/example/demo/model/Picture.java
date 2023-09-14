@@ -85,9 +85,9 @@ public class Picture {
 		this.pic = pic;
 	}
 
-//	public Gallery getGallery() {
-//		return gallery;
-//	}
+	public Gallery getGallery() {
+		return gallery;
+	}
 
 	public void setGallery(Gallery gallery) {
 		this.gallery = gallery;

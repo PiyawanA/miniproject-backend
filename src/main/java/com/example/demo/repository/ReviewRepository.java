@@ -10,7 +10,7 @@ import com.example.demo.model.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-	@Query("SELECT r.reviewId, r.comment, r.time, r.member  FROM Review r WHERE r.picture.picId = :picId")
+	@Query("SELECT r.reviewId, r.comment, r.time, r.gallery  FROM Review r WHERE r.picture.picId = :picId")
 	List<Object[]> findReviewByPicId(@Param("picId") Long picId);
 
 }

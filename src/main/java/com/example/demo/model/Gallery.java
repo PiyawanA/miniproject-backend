@@ -20,7 +20,12 @@ public class Gallery {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long galleryId;
-	private String name;
+	private String firstname;
+	private String lastname;
+	private String email;
+	private String username;
+	private String password;
+	private String galleryname;
 	private String description;
 	private Timestamp time;
 
@@ -28,23 +33,27 @@ public class Gallery {
 	@Column(length = 3048576)
 	private byte[] picprofile;
 
-	@OneToMany
-	@JoinColumn(name = "galleryId")
-	private List<Picture> pictures;
+//	@OneToMany
+//	@JoinColumn(name = "galleryId")
+//	private List<Picture> pictures;
 
 	public Gallery() {
 		super();
 	}
 
-	public Gallery(Long galleryId, String name, String description, Timestamp time, byte[] picprofile,
-			List<Picture> pictures) {
+	public Gallery(Long galleryId, String firstname, String lastname, String email, String username, String password,
+			String galleryname, String description, Timestamp time, byte[] picprofile) {
 		super();
 		this.galleryId = galleryId;
-		this.name = name;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.galleryname = galleryname;
 		this.description = description;
 		this.time = time;
 		this.picprofile = picprofile;
-		this.pictures = pictures;
 	}
 
 	public Long getGalleryId() {
@@ -55,12 +64,52 @@ public class Gallery {
 		this.galleryId = galleryId;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getGalleryname() {
+		return galleryname;
+	}
+
+	public void setGalleryname(String galleryname) {
+		this.galleryname = galleryname;
 	}
 
 	public String getDescription() {
@@ -86,15 +135,5 @@ public class Gallery {
 	public void setPicprofile(byte[] picprofile) {
 		this.picprofile = picprofile;
 	}
-
-	public List<Picture> getPictures() {
-		return pictures;
-	}
-
-	public void setPictures(List<Picture> pictures) {
-		this.pictures = pictures;
-	}
-
-	
 
 }

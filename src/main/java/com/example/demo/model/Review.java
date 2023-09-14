@@ -21,8 +21,8 @@ public class Review {
 	private Timestamp time;
 
 	@ManyToOne
-	@JoinColumn(name = "memId")
-	private Member member;
+	@JoinColumn(name = "galleryId")
+	private Gallery gallery;
 
 	@ManyToOne
 	@JoinColumn(name = "picId")
@@ -32,36 +32,12 @@ public class Review {
 		super();
 	}
 
-	public Review(Long reviewId, String comment, Timestamp time, Member member, Picture picture) {
+	public Review(Long reviewId, String comment, Timestamp time, Gallery gallery, Picture picture) {
 		super();
 		this.reviewId = reviewId;
 		this.comment = comment;
 		this.time = time;
-		this.member = member;
-		this.picture = picture;
-	}
-
-	public Timestamp getTime() {
-		return time;
-	}
-
-	public void setTime(Timestamp time) {
-		this.time = time;
-	}
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
-
-	public Picture getPicture() {
-		return picture;
-	}
-
-	public void setPicture(Picture picture) {
+		this.gallery = gallery;
 		this.picture = picture;
 	}
 
@@ -79,6 +55,30 @@ public class Review {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Timestamp getTime() {
+		return time;
+	}
+
+	public void setTime(Timestamp time) {
+		this.time = time;
+	}
+
+	public Gallery getGallery() {
+		return gallery;
+	}
+
+	public void setGallery(Gallery gallery) {
+		this.gallery = gallery;
+	}
+
+	public Picture getPicture() {
+		return picture;
+	}
+
+	public void setPicture(Picture picture) {
+		this.picture = picture;
 	}
 
 }

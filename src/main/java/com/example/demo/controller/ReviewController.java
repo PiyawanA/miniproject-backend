@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Member;
-import com.example.demo.model.Picture;
+import com.example.demo.model.Gallery;
 import com.example.demo.model.Review;
 import com.example.demo.repository.ReviewRepository;
-import com.mysql.cj.result.Row;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class ReviewController {
 
@@ -40,12 +40,12 @@ public class ReviewController {
 				Long reviewId = (Long) row[0];
 				String comment = (String) row[1];
 				Timestamp time = (Timestamp) row[2];
-				Member mem = (Member) row[3];
+				Gallery gallery = (Gallery) row[3];
 				
 
-				mem.setPassword(null);
+				gallery.setPassword(null);
 
-				Review review = new Review(reviewId, comment, time, mem, null);
+				Review review = new Review(reviewId, comment, time, gallery, null);
 
 				reviews.add(review);
 			}
@@ -78,7 +78,7 @@ public class ReviewController {
 	}
 
 	@PutMapping("/review/{reviewId}")
-	public ResponseEntity<Object> updateMember(@PathVariable("reviewId") Long reviewId, @RequestBody Review body) {
+	public ResponseEntity<Object> editReview(@PathVariable("reviewId") Long reviewId, @RequestBody Review body) {
 
 		try {
 
@@ -98,7 +98,7 @@ public class ReviewController {
 				return new ResponseEntity<>(reviewEdit, HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<>("Member Not Found.", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Review Not Found.", HttpStatus.BAD_REQUEST);
 			}
 
 		} catch (Exception e) {
@@ -109,7 +109,7 @@ public class ReviewController {
 	}
 
 	@DeleteMapping("/review/{reviewId}")
-	public ResponseEntity<Object> deletReview(@PathVariable Long reviewId) {
+	public ResponseEntity<Object> deleteReview(@PathVariable Long reviewId) {
 
 		try {
 			Optional<Review> review = reviewRepository.findById(reviewId);
