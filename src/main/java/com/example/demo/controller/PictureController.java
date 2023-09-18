@@ -2,10 +2,9 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +17,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.model.Gallery;
 import com.example.demo.model.Picture;
+import com.example.demo.model.Review;
 import com.example.demo.repository.PictureRepository;
+import com.example.demo.repository.ReviewRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class PictureController {
 
 	@Autowired
 	PictureRepository pictureRepository;
+	
+	@Autowired
+	ReviewRepository reviewRepository;
 	
 	@GetMapping("/photo")
 	public ResponseEntity<Object> getMember() {
@@ -64,26 +71,95 @@ public class PictureController {
 		}
 	}
 	
-	@DeleteMapping("/photo/{picId}")
-	public ResponseEntity<Object> deletePictuResponseEntity (@PathVariable Long picId){
+	@GetMapping("/photo/{galleryId}")
+	public ResponseEntity<Object> getPhotoBygalleryId(@PathVariable("galleryId") Long galleryId) {
+
 		try {
-			Optional<Picture> picture = pictureRepository.findById(picId);
 
-			if (picture.isPresent()) {
+			  List<Object[]> listPhoto = pictureRepository.findPictureByGalleryId(galleryId);
+		        List<Picture> pictures = new ArrayList<>();
 
-				pictureRepository.delete(picture.get());
+		        for (Object[] row : listPhoto) {
+		            Long picId = (Long) row[0];
+		            String name = (String) row[1];
+		            String caption = (String) row[2];
+		            Timestamp time = (Timestamp) row[3];
+		            byte[] pic = (byte[]) row[4];
+		            Gallery gallery = (Gallery) row[5];
 
-				return new ResponseEntity<>("Delete Sucess", HttpStatus.OK);
+		            Picture picture = new Picture(picId, name, caption, time, pic, gallery);
+		            pictures.add(picture);
+		        }
+
+		        return new ResponseEntity<>(pictures, HttpStatus.OK);
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Internal server error.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	
+	@DeleteMapping("/photo/{picId}")
+	public ResponseEntity<Object> deleteBoardGameById(@PathVariable("picId") Long picId) {
+
+		try {
+
+			Optional<Picture> picFound = pictureRepository.findById(picId);
+
+			if (picFound.isPresent()) {
+
+				List<Object[]> listReviews = reviewRepository.findReviewByPicId(picId);
+
+				for (Object[] row : listReviews) {
+					Long reviewId = (Long) row[0];
+					String comment = (String) row[1];
+					Timestamp time = (Timestamp) row[2];
+					Gallery gallery = (Gallery) row[3];
+
+					Review review = new Review(reviewId, comment, time, gallery, null);
+
+					reviewRepository.delete(review);
+
+				}
+
+				pictureRepository.delete(picFound.get());
+
+				return new ResponseEntity<>("Delete Success.", HttpStatus.OK);
 
 			} else {
+				return new ResponseEntity<>(" Not Found.", HttpStatus.BAD_REQUEST);
+			}
 
-				return new ResponseEntity<>("Not found", HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Internal server error.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	@GetMapping("/searchGallery")
+	public ResponseEntity<Object> searchGallery(@RequestParam("galleryname") String galleryname) {
+
+		try {
+			List<Picture> galleryFound = pictureRepository.findGalleryByName(galleryname);
+
+			if (!galleryFound.isEmpty()) {
+				return new ResponseEntity<>(galleryFound, HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 			}
 
 		} catch (Exception e) {
 
-			return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Internal server error.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
+	}
+	
+	
 	}
 
-}
+

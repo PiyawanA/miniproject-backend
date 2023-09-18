@@ -27,6 +27,8 @@ public class Review {
 	@ManyToOne
 	@JoinColumn(name = "picId")
 	private Picture picture;
+	
+
 
 	public Review() {
 		super();

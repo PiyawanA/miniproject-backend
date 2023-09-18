@@ -71,26 +71,6 @@ public class GalleryController {
 		}
 	}
 
-	@GetMapping("/searchGallery")
-	public ResponseEntity<Object> searchGallery(@RequestParam("galleryname") String galleryname) {
-
-		try {
-			List<Gallery> galleryFound = galleryRepository.findGalleryByName(galleryname);
-
-			if (!galleryFound.isEmpty()) {
-				return new ResponseEntity<>(galleryFound, HttpStatus.OK);
-
-			} else {
-				return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-			}
-
-		} catch (Exception e) {
-
-			System.out.println(e.getMessage());
-			return new ResponseEntity<>("Internal server error.", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-	}
 
 	@PutMapping(value = "/gallery/{galleryId}", consumes = { "multipart/form-data" })
 	public ResponseEntity<Object> updateGallery(@PathVariable("galleryId") Long galleryId,
@@ -109,6 +89,8 @@ public class GalleryController {
 				if (!photo.isEmpty()) {
 					gallery.setPicprofile(photo.getBytes());
 
+				}else {
+					gallery.setPicprofile(galleryEdit.getPicprofile());
 				}
 
 				galleryEdit.setGalleryname(gallery.getGalleryname());
@@ -119,7 +101,7 @@ public class GalleryController {
 				galleryEdit.setLastname(gallery.getLastname());
 				galleryEdit.setEmail(gallery.getEmail());
 				galleryEdit.setUsername(gallery.getUsername());
-				galleryEdit.setPassword(gallery.getPassword());
+//				galleryEdit.setPassword(gallery.getPassword());
 				
 				galleryRepository.save(galleryEdit);
 
@@ -177,8 +159,7 @@ public class GalleryController {
 	}
 
 	@PostMapping(value = "/register", consumes = { "multipart/form-data" })
-	public ResponseEntity<Object> registerUser(@RequestParam("body") String body,
-			@RequestParam("photo") MultipartFile photo) throws IOException {
+	public ResponseEntity<Object> registerUser(@RequestParam("body") String body){
 		try {
 			Gallery gallery = new ObjectMapper().readValue(body, Gallery.class);
 
@@ -186,11 +167,8 @@ public class GalleryController {
 				return new ResponseEntity<>("Username is already taken.", HttpStatus.BAD_REQUEST);
 			}
 
-			if (!photo.isEmpty()) {
-				gallery.setPicprofile(photo.getBytes());
-			} else {
 				gallery.setPicprofile(null);
-			}
+			
 
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			gallery.setTime(now);
@@ -220,6 +198,26 @@ public class GalleryController {
 			System.out.println(e.getMessage());
 			return new ResponseEntity<>("Internal server error.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@GetMapping("/checkUsername")
+	public ResponseEntity<Object> checkUsername(@RequestParam("username") String username) {
+
+		try {
+			Optional<Gallery> userFound = galleryRepository.findByUsername(username);
+
+			if (userFound.isPresent()) {
+				return new ResponseEntity<>(true, HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<>(false, HttpStatus.OK);
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Internal server error.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 }

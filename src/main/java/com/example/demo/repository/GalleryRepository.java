@@ -11,8 +11,7 @@ import com.example.demo.model.Gallery;
 
 public interface GalleryRepository extends JpaRepository<Gallery, Long> {
 
-	@Query("SELECT g FROM Gallery g WHERE LOWER(g.galleryname) LIKE LOWER(CONCAT('%', :galleryname, '%'))")
-	List<Gallery> findGalleryByName(@Param("galleryname") String name);
+	
 
 	Optional<Gallery> findByUsername(String username);
 
